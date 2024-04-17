@@ -31,13 +31,13 @@ public interface JWTProvider {
     boolean isValidTokenWithoutExpiration(String token);
 
     //Json Web Token 중 페이로드에 들어가는 정보
-    Claims createClaims(String userEmail, List<String> roles);
+    Claims createClaims(String userUid, List<String> roles);
 
     //액세스 토큰 생성
-    Token createAccessToken(String userEmail, List<String> roles);
+    Token createAccessToken(String userUid, List<String> roles);
 
     //리프레시 토큰 생성
-    Token createRefreshToken(String userEmail, List<String> roles);
+    Token createRefreshToken(String userUid, List<String> roles);
 
     //액세스 토큰 갱신
     Token recreateAccessToken(String refreshToken);
@@ -48,7 +48,7 @@ public interface JWTProvider {
 
     Claims getClaim(String token);
     //토큰으로부터 사용자의 이메일 가져오기
-    String getUserEmail(String token);
+    String getUserUid(String token);
 
     //토큰으로부터 사용자 권한 가져오기
     List<String> getUserRoles(String token);

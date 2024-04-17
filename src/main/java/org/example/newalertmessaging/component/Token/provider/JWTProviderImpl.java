@@ -43,8 +43,8 @@ public class JWTProviderImpl implements JWTProvider {
         this.secretKey = secretKey;
     }
 
-    private Token createToken(String tokenType, String userEmail, List<String> roles, long duration){
-        Claims claims = createClaims(userEmail, roles);
+    private Token createToken(String tokenType, String userUid, List<String> roles, long duration){
+        Claims claims = createClaims(userUid, roles);
         Date now = new Date();
         Date expiredAt = new Date(now.getTime() + duration);
         String token = Jwts.builder()
@@ -83,29 +83,29 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public Claims createClaims(String userEmail, List<String> roles) {
-        Claims claims = Jwts.claims().setSubject(userEmail);
+    public Claims createClaims(String userUid, List<String> roles) {
+        Claims claims = Jwts.claims().setSubject(userUid);
         claims.put(ROLES, roles);
         return claims;
     }
 
     @Override
-    public Token createAccessToken(String userEmail, List<String> roles) {
-        return createToken(ACCESS_TOKEN, userEmail, roles, ACCESS_TOKEN_EXPIRY);
+    public Token createAccessToken(String userUid, List<String> roles) {
+        return createToken(ACCESS_TOKEN, userUid, roles, ACCESS_TOKEN_EXPIRY);
     }
 
     @Override
-    public Token createRefreshToken(String userEmail, List<String> roles) {
-        return createToken(REFRESH_TOKEN, userEmail, roles, REFRESH_TOKEN_EXPIRY);
+    public Token createRefreshToken(String userUid, List<String> roles) {
+        return createToken(REFRESH_TOKEN, userUid, roles, REFRESH_TOKEN_EXPIRY);
     }
 
     @Override
     public Token recreateAccessToken(String refreshToken) {
         if(!isValidTokenWithExpiration(refreshToken))
             throw new InvalidTokenException("리프레시 토큰이 유효하지 않습니다.");
-        String userEmail = getUserEmail(refreshToken);
+        String userUid = getUserUid(refreshToken);
         List<String> userRole = getUserRoles(refreshToken);
-        return createAccessToken(userEmail, userRole);
+        return createAccessToken(userUid, userRole);
     }
 
     @Override
@@ -114,7 +114,6 @@ public class JWTProviderImpl implements JWTProvider {
         //check token's subject really our user by using db's info
         UserDetails userDetails =
                 userDetailsService.loadUserByUsername(this.getUserEmail(token));
-
          */
         Claims claims = getClaim(token);
         UserDetails userDetails = User.builder()
@@ -135,7 +134,7 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public String getUserEmail(String token) {
+    public String getUserUid(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()

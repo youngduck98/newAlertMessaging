@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 public class Token {
-    public String tokenType;
+    public String tokenType; //cookie key
     public String value;
     public Date expiredAt;
 }

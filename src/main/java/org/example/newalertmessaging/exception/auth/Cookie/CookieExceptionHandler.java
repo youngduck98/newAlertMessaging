@@ -1,5 +1,5 @@
 package org.example.newalertmessaging.exception.auth.Cookie;
-
+/*
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.newalertmessaging.exception.DTO.ErrorResponseDTO;
 import org.example.newalertmessaging.exception.DTO.ResponseDTO;
@@ -29,3 +29,4 @@ public class CookieExceptionHandler {
         );
     }
 }
+*/

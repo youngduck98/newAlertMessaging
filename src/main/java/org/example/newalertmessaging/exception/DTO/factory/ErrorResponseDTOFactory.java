@@ -11,6 +11,11 @@ public class ErrorResponseDTOFactory extends ResponseDTOFactory{
     public ErrorResponseDTOFactory(){
         super.setMail(true);
     }
+
+    @Override
+    public void clear(){
+        super.mail = true;
+    }
     @Override
     protected ResponseDTO createResponseDTOWithAdditionalWork(String msg) {
         //TODO if mail is true, send email to admin
