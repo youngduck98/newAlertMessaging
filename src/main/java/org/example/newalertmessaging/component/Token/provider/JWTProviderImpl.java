@@ -11,6 +11,7 @@ import org.example.newalertmessaging.component.Token.Token;
 import org.example.newalertmessaging.component.Token.provider.JWTProvider;
 import org.example.newalertmessaging.exception.auth.Cookie.CookieNotFoundException;
 import org.example.newalertmessaging.exception.auth.JWT.InvalidTokenException;
+import org.jasypt.util.text.AES256TextEncryptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @Component
 public class JWTProviderImpl implements JWTProvider {
     private final String secretKey;
+    private final AES256TextEncryptor aes256TextEncryptor;
     /*private final UserDetailsService userDetailsService;
     private final ObjectMapper objectMapper;
     public JWTProviderImpl(@Value("{jwt.secret}") String secretKey,
@@ -39,12 +41,15 @@ public class JWTProviderImpl implements JWTProvider {
     }
      */
 
-    public JWTProviderImpl(@Value("{jwt.secret}") String secretKey){
+    public JWTProviderImpl(@Value("{jwt.secret}") String secretKey,
+                        AES256TextEncryptor aes256TextEncryptor){
         this.secretKey = secretKey;
+        this.aes256TextEncryptor = aes256TextEncryptor;
     }
 
     private Token createToken(String tokenType, String userUid, List<String> roles, long duration){
-        Claims claims = createClaims(userUid, roles);
+        String encodedUid = aes256TextEncryptor.encrypt(userUid);
+        Claims claims = createClaims(encodedUid, roles);
         Date now = new Date();
         Date expiredAt = new Date(now.getTime() + duration);
         String token = Jwts.builder()
@@ -83,8 +88,8 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public Claims createClaims(String userUid, List<String> roles) {
-        Claims claims = Jwts.claims().setSubject(userUid);
+    public Claims createClaims(String encodedUid, List<String> roles) {
+        Claims claims = Jwts.claims().setSubject(encodedUid);
         claims.put(ROLES, roles);
         return claims;
     }
@@ -135,12 +140,14 @@ public class JWTProviderImpl implements JWTProvider {
 
     @Override
     public String getUserUid(String token) {
-        return Jwts.parserBuilder()
+        return aes256TextEncryptor.decrypt(
+                Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJwt(token)
                 .getBody()
-                .getSubject();
+                .getSubject()
+        );
     }
 
     @Override
