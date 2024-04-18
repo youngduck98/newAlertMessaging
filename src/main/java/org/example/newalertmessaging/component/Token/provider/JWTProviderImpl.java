@@ -48,7 +48,10 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     private Token createToken(String tokenType, String userUid, List<String> roles, long duration){
-        String encodedUid = aes256TextEncryptor.encrypt(userUid);
+        String encodedUid = userUid;
+        if(!userUid.isEmpty()){
+            encodedUid = aes256TextEncryptor.encrypt(userUid);
+        }
         Claims claims = createClaims(encodedUid, roles);
         Date now = new Date();
         Date expiredAt = new Date(now.getTime() + duration);
