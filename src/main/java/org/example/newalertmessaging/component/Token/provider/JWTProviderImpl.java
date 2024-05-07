@@ -7,11 +7,13 @@ import io.jsonwebtoken.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.newalertmessaging.Service.userDetailedService.CustomUserDetailedService;
 import org.example.newalertmessaging.component.Token.Token;
 import org.example.newalertmessaging.component.Token.provider.JWTProvider;
 import org.example.newalertmessaging.exception.auth.Cookie.CookieNotFoundException;
 import org.example.newalertmessaging.exception.auth.JWT.InvalidTokenException;
 import org.jasypt.util.text.AES256TextEncryptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,20 +32,14 @@ import java.util.stream.Collectors;
 public class JWTProviderImpl implements JWTProvider {
     private final String secretKey;
     private final AES256TextEncryptor aes256TextEncryptor;
-    /*private final UserDetailsService userDetailsService;
-    private final ObjectMapper objectMapper;
+    private final UserDetailsService userDetailsService;
+   // private final ObjectMapper objectMapper;
+    @Autowired
     public JWTProviderImpl(@Value("{jwt.secret}") String secretKey,
-                           UserDetailsService userDetailsService,
-                           ObjectMapper objectMapper){
+                           CustomUserDetailedService userDetailsService,
+                           AES256TextEncryptor aes256TextEncryptor){
         this.secretKey = secretKey;
         this.userDetailsService = userDetailsService;
-        this.objectMapper = objectMapper;
-    }
-     */
-
-    public JWTProviderImpl(@Value("{jwt.secret}") String secretKey,
-                        AES256TextEncryptor aes256TextEncryptor){
-        this.secretKey = secretKey;
         this.aes256TextEncryptor = aes256TextEncryptor;
     }
 
@@ -118,17 +114,17 @@ public class JWTProviderImpl implements JWTProvider {
 
     @Override
     public Authentication getAuthentication(String token) {
-        /*
-        //check token's subject really our user by using db's info
+        //get user Details by using token
         UserDetails userDetails =
-                userDetailsService.loadUserByUsername(this.getUserEmail(token));
-         */
+                userDetailsService.loadUserByUsername(this.getUserUid(token));
+        /*
         Claims claims = getClaim(token);
         UserDetails userDetails = User.builder()
                 .username(claims.getSubject())
                 .password("")
                 .authorities(claims.getAudience())
                 .build();
+         */
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -143,24 +139,16 @@ public class JWTProviderImpl implements JWTProvider {
 
     @Override
     public String getUserUid(String token) {
-        return aes256TextEncryptor.decrypt(
-                Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJwt(token)
-                .getBody()
-                .getSubject()
-        );
+        return aes256TextEncryptor.decrypt(getClaim(token).getSubject());
     }
 
     @Override
     public List<String> getUserRoles(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJwt(token)
-                .getBody();
-        return claims.get(ROLES, List.class);
+        List<?> rawList = getClaim(token).get(ROLES, List.class);
+
+        return rawList.stream()
+                .map(item -> (String) item)
+                .collect(Collectors.toList());
     }
 
     @Override
