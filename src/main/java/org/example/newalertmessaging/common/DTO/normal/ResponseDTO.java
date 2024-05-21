@@ -1,4 +1,4 @@
-package org.example.newalertmessaging.common.DTO;
+package org.example.newalertmessaging.common.DTO.normal;
 
 import lombok.Data;
 

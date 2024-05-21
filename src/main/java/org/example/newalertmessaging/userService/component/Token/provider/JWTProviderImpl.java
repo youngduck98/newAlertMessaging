@@ -96,9 +96,9 @@ public class JWTProviderImpl implements JWTProvider {
     public Token recreateAccessToken(String refreshToken) {
         if(!isValidTokenWithExpiration(refreshToken))
             throw new InvalidTokenException("리프레시 토큰이 유효하지 않습니다.");
-        String userEmail = getUserEmail(refreshToken);
+        String userUuid = getUserUid(refreshToken);
         List<String> userRole = getUserRoles(refreshToken);
-        return createAccessToken(userEmail, userRole);
+        return createAccessToken(userUuid, userRole);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public String getUserEmail(String token) {
+    public String getUserUid(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()

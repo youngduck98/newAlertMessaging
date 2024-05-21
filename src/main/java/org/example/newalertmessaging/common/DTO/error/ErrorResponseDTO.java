@@ -1,8 +1,8 @@
-package org.example.newalertmessaging.common.exception.DTO;
+package org.example.newalertmessaging.common.DTO.error;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.example.newalertmessaging.common.DTO.ResponseDTO;
+import org.example.newalertmessaging.common.DTO.normal.ResponseDTO;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

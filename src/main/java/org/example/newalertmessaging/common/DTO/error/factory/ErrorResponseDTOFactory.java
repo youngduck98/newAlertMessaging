@@ -1,8 +1,8 @@
-package org.example.newalertmessaging.common.exception.DTO.factory;
+package org.example.newalertmessaging.common.DTO.error.factory;
 
-import org.example.newalertmessaging.common.DTO.factory.ResponseDTOFactory;
-import org.example.newalertmessaging.common.exception.DTO.ErrorResponseDTO;
-import org.example.newalertmessaging.common.DTO.ResponseDTO;
+import org.example.newalertmessaging.common.DTO.ResponseDTOFactory;
+import org.example.newalertmessaging.common.DTO.error.ErrorResponseDTO;
+import org.example.newalertmessaging.common.DTO.normal.ResponseDTO;
 import org.springframework.stereotype.Component;
 /*
 using factory method pattern

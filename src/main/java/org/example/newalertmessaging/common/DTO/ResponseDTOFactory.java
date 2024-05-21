@@ -1,11 +1,13 @@
-package org.example.newalertmessaging.common.DTO.factory;
+package org.example.newalertmessaging.common.DTO;
 
 import lombok.Setter;
-import org.example.newalertmessaging.common.DTO.ResponseDTO;
+import org.example.newalertmessaging.common.DTO.normal.ResponseDTO;
 
 @Setter
 public abstract class ResponseDTOFactory {
     protected boolean mail = false;
+
+    public void clear(){this.mail = false;}
 
     public ResponseDTO newResponseDto(String msg){
         return createResponseDTOWithAdditionalWork(msg);

@@ -1,9 +1,9 @@
 package org.example.newalertmessaging.userService.exception.auth.Cookie;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.newalertmessaging.common.DTO.ResponseDTO;
-import org.example.newalertmessaging.common.exception.DTO.factory.ErrorResponseDTOFactory;
-import org.example.newalertmessaging.common.DTO.factory.ResponseDTOFactory;
+import org.example.newalertmessaging.common.DTO.normal.ResponseDTO;
+import org.example.newalertmessaging.common.DTO.error.factory.ErrorResponseDTOFactory;
+import org.example.newalertmessaging.common.DTO.ResponseDTOFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

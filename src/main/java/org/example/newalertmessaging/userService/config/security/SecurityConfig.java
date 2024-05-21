@@ -22,7 +22,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    public static final String[] PublicUrls = {"/auth-api/**", "/exception", "/error"};
+    public static final String[] PublicUrls = {"/auth-api/**", "/error", "/error"};
     final AuthenticationEntryPoint authenticationEntryPoint;
     final JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
