@@ -1,4 +1,4 @@
-package org.example.newalertmessaging.mailService.realTimeService.common.domainObject.user.commonSetting;
+package org.example.newalertmessaging.mailService.common.domainObject.user.commonSetting;
 
 public class realTimeCommonSetting extends UserCommonSetting{
     public realTimeCommonSetting(){

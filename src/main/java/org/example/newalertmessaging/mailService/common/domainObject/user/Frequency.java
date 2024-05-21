@@ -1,4 +1,4 @@
-package org.example.newalertmessaging.mailService.realTimeService.common.domainObject.user;
+package org.example.newalertmessaging.mailService.common.domainObject.user;
 
 public enum Frequency {
     oneAt8(8, 8), oneAt20(20, 20), twoAt8And20(8, 20);
